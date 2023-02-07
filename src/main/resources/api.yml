@@ -7,7 +7,7 @@ info:
 servers:
   - url: api/v1
 paths:
-  /customer:
+  /customers:
     post:
       tags:
         - customer

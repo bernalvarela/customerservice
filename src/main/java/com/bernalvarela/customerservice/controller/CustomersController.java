@@ -1,6 +1,6 @@
 package com.bernalvarela.customerservice.controller;
 
-import com.bernalvarela.customerservice.api.CustomerApi;
+import com.bernalvarela.customerservice.api.CustomersApi;
 import com.bernalvarela.customerservice.model.Customer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class CustomerController implements CustomerApi {
+public class CustomersController implements CustomersApi {
 
     @Override
     public ResponseEntity<String> addCustomer(@Valid Customer customer) {
