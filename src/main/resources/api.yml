@@ -79,7 +79,7 @@ paths:
           description: id not found
         '401':
           description: Unauthorized
-    patch:
+    put:
       tags:
         - customer
       summary: Update a customer
