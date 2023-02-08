@@ -2,12 +2,10 @@ package com.bernalvarela.customerservice.infrastructure.repository;
 
 import com.bernalvarela.customerservice.domain.model.Customer;
 import com.bernalvarela.customerservice.domain.repository.CustomerRepository;
-
 import com.bernalvarela.customerservice.infrastructure.mapper.CustomerEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 

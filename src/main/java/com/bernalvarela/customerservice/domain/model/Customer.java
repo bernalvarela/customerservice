@@ -1,6 +1,8 @@
 package com.bernalvarela.customerservice.domain.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.ToString;
+import lombok.Value;
 
 @Value
 @ToString

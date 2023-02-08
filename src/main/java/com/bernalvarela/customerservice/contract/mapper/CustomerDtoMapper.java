@@ -8,10 +8,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CustomerDtoMapper {
 
-        Customer domainToDto(com.bernalvarela.customerservice.domain.model.Customer customer);
+    Customer domainToDto(com.bernalvarela.customerservice.domain.model.Customer customer);
 
-        List<Customer> domainToDto(List<com.bernalvarela.customerservice.domain.model.Customer> customers);
+    List<Customer> domainToDto(List<com.bernalvarela.customerservice.domain.model.Customer> customers);
 
-        com.bernalvarela.customerservice.domain.model.Customer dtoToDomain(Customer customer);
+    com.bernalvarela.customerservice.domain.model.Customer dtoToDomain(Customer customer);
 
 }
