@@ -1,7 +1,17 @@
 package com.bernalvarela.customerservice.domain.repository;
 
-import com.bernalvarela.customerservice.domain.entity.Customer;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.bernalvarela.customerservice.domain.model.Customer;
 
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+import java.util.List;
+import java.util.Optional;
+
+public interface CustomerRepository {
+
+    List<Customer> findAll();
+
+    Optional<Customer> findById(Long id);
+
+    void deleteById(Long id);
+
+    void update(Long id, Customer c);
 }

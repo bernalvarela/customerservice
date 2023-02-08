@@ -1,9 +1,11 @@
-package com.bernalvarela.customerservice.domain.entity;
+package com.bernalvarela.customerservice.infrastructure.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+
+        import jakarta.persistence.*;
+        import lombok.AllArgsConstructor;
+        import lombok.Getter;
+        import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
