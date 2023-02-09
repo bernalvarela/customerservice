@@ -1,5 +1,6 @@
 package com.bernalvarela.customerservice.infrastructure.repository;
 
+import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.domain.model.User;
 import com.bernalvarela.customerservice.domain.repository.UserRepository;
 import com.bernalvarela.customerservice.infrastructure.mapper.UserEntityMapper;
@@ -7,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Repository
@@ -31,6 +31,8 @@ public class UserRepositoryImpl implements UserRepository {
             com.bernalvarela.customerservice.infrastructure.entity.User user = mapper.domainToEntity(u);
             user.setId(id);
             repository.save(user);
+        } else {
+            throw new ElementNotFoundException();
         }
     }
 
@@ -38,12 +40,16 @@ public class UserRepositoryImpl implements UserRepository {
         return mapper.entityToDomain(repository.findAll());
     }
 
-    @Override public Optional<User> findById(Long id) {
-        return Optional.empty();
+    @Override public User findById(Long id) {
+        return mapper.entityToDomain(repository.findById(id).orElseThrow(ElementNotFoundException::new));
     }
 
     @Override public void deleteById(Long id) {
-        repository.deleteById(id);
+        if (repository.findById(id).isPresent()) {
+            repository.deleteById(id);
+        } else {
+            throw new ElementNotFoundException();
+        }
     }
 
 }

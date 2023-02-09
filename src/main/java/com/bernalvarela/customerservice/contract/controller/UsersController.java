@@ -2,6 +2,7 @@ package com.bernalvarela.customerservice.contract.controller;
 
 import com.bernalvarela.customerservice.application.service.UserService;
 import com.bernalvarela.customerservice.contract.mapper.UserDtoMapper;
+import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.openapi.api.UsersApi;
 import com.bernalvarela.customerservice.openapi.model.User;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,37 +20,43 @@ import java.util.List;
 public class UsersController implements UsersApi {
 
     @Autowired
-    private UserService userService;
+    private UserService service;
 
     @Autowired
-    private UserDtoMapper userDtoMapper;
+    private UserDtoMapper mapper;
 
     @Override
-    public ResponseEntity<String> addUser(@Valid User user) {
-        User createdUser = userDtoMapper.domainToDto(userService.createUser(userDtoMapper.dtoToDomain(user)));
-        return ResponseEntity.ok("User with id " + createdUser.getId() + " is added");
+    public ResponseEntity<User> addUser(@Valid User user) {
+        User createdUser = mapper.domainToDto(service.createUser(mapper.dtoToDomain(user)));
+        return ResponseEntity.ok(createdUser);
     }
 
     @Override
     public ResponseEntity<User> getUser(
             @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id
     ) {
-        return userService.getUser(id)
-                .map(user -> ResponseEntity.ok(userDtoMapper.domainToDto(user)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            return ResponseEntity.ok(mapper.domainToDto(service.getUser(id)));
+        } catch (ElementNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
     public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userDtoMapper.domainToDto(userService.getUsers()));
+        return ResponseEntity.ok(mapper.domainToDto(service.getUsers()));
     }
 
     @Override
     public ResponseEntity<Void> deleteUser(
             @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id
     ) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            service.deleteUser(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (ElementNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
@@ -57,8 +64,11 @@ public class UsersController implements UsersApi {
             @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id,
             @Parameter(name = "User", description = "Update a user", required = true) @Valid @RequestBody User user
     ) {
-        userService.updateUser(id, userDtoMapper.dtoToDomain(user));
-        return new ResponseEntity<>(HttpStatus.OK);
-
+        try {
+            service.updateUser(id, mapper.dtoToDomain(user));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ElementNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

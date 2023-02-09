@@ -22,7 +22,7 @@ public class UserService {
         return repository.findAll();
     }
 
-    public Optional<User> getUser(Long id) {
+    public User getUser(Long id) {
         return repository.findById(id);
     }
 
