@@ -1,10 +1,12 @@
 package com.bernalvarela.customerservice.infrastructure.repository;
 
+import com.bernalvarela.customerservice.domain.exception.ElementAlreadyExistsException;
 import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.domain.model.User;
 import com.bernalvarela.customerservice.domain.repository.UserRepository;
 import com.bernalvarela.customerservice.infrastructure.mapper.UserEntityMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,6 +24,8 @@ public class UserRepositoryImpl implements UserRepository {
         User createdUser = null;
         if (users == null || users.isEmpty()) {
             createdUser = mapper.entityToDomain(repository.save(mapper.domainToEntity(u)));
+        } else {
+            throw new ElementAlreadyExistsException();
         }
         return createdUser;
     }
@@ -45,9 +49,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override public void deleteById(Long id) {
-        if (repository.findById(id).isPresent()) {
+        try {
             repository.deleteById(id);
-        } else {
+        } catch (EmptyResultDataAccessException e) {
             throw new ElementNotFoundException();
         }
     }

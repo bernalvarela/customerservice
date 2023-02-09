@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class User {
 
-    long id;
+    Long id;
 
     String name;
 

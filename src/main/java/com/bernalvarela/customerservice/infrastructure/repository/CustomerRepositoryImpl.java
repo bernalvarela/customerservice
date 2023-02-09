@@ -5,6 +5,7 @@ import com.bernalvarela.customerservice.domain.model.Customer;
 import com.bernalvarela.customerservice.domain.repository.CustomerRepository;
 import com.bernalvarela.customerservice.infrastructure.mapper.CustomerEntityMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,11 +41,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override public void deleteById(Long id) {
-        if (repository.findById(id).isPresent()) {
+        try {
             repository.deleteById(id);
-        } else {
+        } catch (EmptyResultDataAccessException e) {
             throw new ElementNotFoundException();
         }
     }
-
 }

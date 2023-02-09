@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class Customer {
 
-    long id;
+    Long id;
 
     String name;
 
