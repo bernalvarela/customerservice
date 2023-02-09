@@ -1,4 +1,4 @@
 package com.bernalvarela.customerservice.domain.exception;
 
-public class ElementNotFoundException extends RuntimeException{
+public class ElementNotFoundException extends RuntimeException {
 }

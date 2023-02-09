@@ -4,7 +4,6 @@ import com.bernalvarela.customerservice.application.service.UserService;
 import com.bernalvarela.customerservice.domain.exception.ElementAlreadyExistsException;
 import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.infrastructure.entity.User;
-import com.bernalvarela.customerservice.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

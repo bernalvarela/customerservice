@@ -3,7 +3,6 @@ package com.bernalvarela.customerservice.infrastructure.repository;
 import com.bernalvarela.customerservice.domain.exception.ElementAlreadyExistsException;
 import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.domain.model.User;
-import com.bernalvarela.customerservice.domain.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
