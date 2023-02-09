@@ -3,7 +3,6 @@ package com.bernalvarela.customerservice.contract.controller;
 import com.bernalvarela.customerservice.application.service.CustomerService;
 import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.infrastructure.entity.Customer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static com.bernalvarela.customerservice.util.JsonUtil.asJsonString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -67,7 +67,6 @@ public class CustomersControllerTest {
         when(service.getCustomer(ID)).thenReturn(CUSTOMERMODEL);
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/customers/{id}", ID)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ID));
@@ -78,7 +77,6 @@ public class CustomersControllerTest {
         when(service.getCustomer(ID)).thenThrow(ElementNotFoundException.class);
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/customers/{id}", ID)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -88,7 +86,6 @@ public class CustomersControllerTest {
         when(service.getCustomers()).thenReturn(List.of(CUSTOMERMODEL));
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -132,13 +129,5 @@ public class CustomersControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

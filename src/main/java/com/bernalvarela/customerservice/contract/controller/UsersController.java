@@ -2,6 +2,7 @@ package com.bernalvarela.customerservice.contract.controller;
 
 import com.bernalvarela.customerservice.application.service.UserService;
 import com.bernalvarela.customerservice.contract.mapper.UserDtoMapper;
+import com.bernalvarela.customerservice.domain.exception.ElementAlreadyExistsException;
 import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.openapi.api.UsersApi;
 import com.bernalvarela.customerservice.openapi.model.User;
@@ -27,8 +28,12 @@ public class UsersController implements UsersApi {
 
     @Override
     public ResponseEntity<User> addUser(@Valid User user) {
-        User createdUser = mapper.domainToDto(service.createUser(mapper.dtoToDomain(user)));
-        return ResponseEntity.ok(createdUser);
+        try {
+            User createdUser = mapper.domainToDto(service.createUser(mapper.dtoToDomain(user)));
+            return ResponseEntity.ok(createdUser);
+        } catch (ElementAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     @Override

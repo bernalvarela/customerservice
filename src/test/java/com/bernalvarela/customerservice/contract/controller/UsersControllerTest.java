@@ -1,9 +1,10 @@
 package com.bernalvarela.customerservice.contract.controller;
 
 import com.bernalvarela.customerservice.application.service.UserService;
+import com.bernalvarela.customerservice.domain.exception.ElementAlreadyExistsException;
 import com.bernalvarela.customerservice.domain.exception.ElementNotFoundException;
 import com.bernalvarela.customerservice.infrastructure.entity.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bernalvarela.customerservice.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static com.bernalvarela.customerservice.util.JsonUtil.asJsonString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -57,7 +59,7 @@ public class UsersControllerTest {
     void shouldReturnCreatedUserWhenAddUser() throws Exception {
         when(service.createUser(any())).thenReturn(USERMODEL);
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/v1/users", 2)
+                        .post("/api/v1/users")
                         .content(asJsonString(USER))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -66,12 +68,21 @@ public class UsersControllerTest {
     }
 
     @Test
+    void shouldReturnErrorWhenAddUserWithAnExistingUsername() throws Exception {
+        when(service.createUser(any())).thenThrow(ElementAlreadyExistsException.class);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/users")
+                        .content(asJsonString(USER))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     void shouldReturnUserWhenGetExistingUser() throws Exception {
         when(service.getUser(ID)).thenReturn(USERMODEL);
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/users/{id}", ID)
-                        .content(asJsonString(USER))
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ID));
@@ -82,8 +93,6 @@ public class UsersControllerTest {
         when(service.getUser(ID)).thenThrow(ElementNotFoundException.class);
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/users/{id}", ID)
-                        .content(asJsonString(USER))
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -93,7 +102,6 @@ public class UsersControllerTest {
         when(service.getUsers()).thenReturn(List.of(USERMODEL));
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -103,7 +111,6 @@ public class UsersControllerTest {
     void shouldReturnNoContentWhenDeleteUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/users/{id}", ID)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -113,7 +120,6 @@ public class UsersControllerTest {
         doThrow(new ElementNotFoundException()).when(service).deleteUser(any());
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/users/{id}", ID)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -139,11 +145,4 @@ public class UsersControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
