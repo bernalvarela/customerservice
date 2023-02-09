@@ -27,7 +27,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/Customer'
         '400':
           description: Bad request
     get:
@@ -47,7 +47,7 @@ paths:
                   $ref: '#/components/schemas/Customer'
         '400':
           description: Bad request
-  /customers/{id}':
+  /customers/{id}:
     parameters:
       - in: path
         name: id
@@ -101,6 +101,8 @@ paths:
                 type: string
         '400':
           description: Bad request
+        '404':
+          description: Element not found
   /users:
     post:
       tags:
@@ -121,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/User'
         '400':
           description: Bad request
         '409':
@@ -143,7 +145,7 @@ paths:
                   $ref: '#/components/schemas/User'
         '400':
           description: Bad request
-  /users/{id}':
+  /users/{id}:
     parameters:
       - in: path
         name: id
@@ -197,6 +199,8 @@ paths:
                 type: string
         '400':
           description: Bad request
+        '404':
+          description: Element not found
 components:
   schemas:
     Customer:
