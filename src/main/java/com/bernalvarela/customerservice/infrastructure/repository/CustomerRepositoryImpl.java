@@ -13,20 +13,24 @@ import java.util.Optional;
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
 
-    private final CustomerRepositoryJPA customerRepositoryJPA;
+    private final CustomerRepositoryJPA repository;
 
     private final CustomerEntityMapper mapper;
 
+    public Customer save(Customer c) {
+        return mapper.entityToDomain(repository.save(mapper.domainToEntity(c)));
+    }
+
     public void update(Long id, Customer c) {
-        if (customerRepositoryJPA.findById(id).isPresent()) {
+        if (repository.findById(id).isPresent()) {
             com.bernalvarela.customerservice.infrastructure.entity.Customer customer = mapper.domainToEntity(c);
             customer.setId(id);
-            customerRepositoryJPA.save(customer);
+            repository.save(customer);
         }
     }
 
     public List<Customer> findAll() {
-        return mapper.entityToDomain(customerRepositoryJPA.findAll());
+        return mapper.entityToDomain(repository.findAll());
     }
 
     @Override public Optional<Customer> findById(Long id) {
@@ -34,7 +38,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override public void deleteById(Long id) {
-        customerRepositoryJPA.deleteById(id);
+        repository.deleteById(id);
     }
 
 }

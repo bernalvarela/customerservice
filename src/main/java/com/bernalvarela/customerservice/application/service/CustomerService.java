@@ -14,6 +14,10 @@ public class CustomerService {
 
     private CustomerRepository repository;
 
+    public Customer createCustomer(Customer c) {
+        return repository.save(c);
+    }
+
     public List<Customer> getCustomers() {
         return repository.findAll();
     }

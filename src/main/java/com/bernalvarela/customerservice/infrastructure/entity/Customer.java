@@ -7,10 +7,12 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 public class Customer {
 
@@ -24,7 +26,4 @@ public class Customer {
 
     private String photo;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

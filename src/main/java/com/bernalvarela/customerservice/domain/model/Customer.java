@@ -1,14 +1,11 @@
 package com.bernalvarela.customerservice.domain.model;
 
 import lombok.Builder;
-import lombok.ToString;
-import lombok.Value;
+import lombok.Getter;
 
-@Value
-@ToString
 @Builder
+@Getter
 public class Customer {
-
     long id;
 
     String name;

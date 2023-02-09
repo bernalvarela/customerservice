@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,35 +21,37 @@ import java.util.List;
 public class CustomersController implements CustomersApi {
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerService service;
 
     @Autowired
-    private CustomerDtoMapper customerDtoMapper;
+    private CustomerDtoMapper mapper;
 
     @Override
     public ResponseEntity<String> addCustomer(@Valid Customer customer) {
-        return ResponseEntity.ok("Customer with id " + customer.getId() + " is added");
+        Customer createdCustomer = mapper.domainToDto(service.createCustomer(mapper.dtoToDomain(customer)));
+        return ResponseEntity.ok("Customer with id " + createdCustomer.getId() + " is added");
     }
 
     @Override
     public ResponseEntity<Customer> getCustomer(
             @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id
     ) {
-        return customerService.getCustomer(id)
-                .map(customer -> ResponseEntity.ok(customerDtoMapper.domainToDto(customer)))
+        return service.getCustomer(id)
+                .map(customer -> ResponseEntity.ok(mapper.domainToDto(customer)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     public ResponseEntity<List<Customer>> getCustomers() {
-        return ResponseEntity.ok(customerDtoMapper.domainToDto(customerService.getCustomers()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(mapper.domainToDto(service.getCustomers()));
     }
 
     @Override
     public ResponseEntity<Void> deleteCustomer(
             @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id
     ) {
-        customerService.deleteCustomer(id);
+        service.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -56,7 +60,7 @@ public class CustomersController implements CustomersApi {
             @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id,
             @Parameter(name = "Customer", description = "Update a customer", required = true) @Valid @RequestBody Customer customer
     ) {
-        customerService.updateCustomer(id, customerDtoMapper.dtoToDomain(customer));
+        service.updateCustomer(id, mapper.dtoToDomain(customer));
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
