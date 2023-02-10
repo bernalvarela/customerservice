@@ -146,3 +146,4 @@ List of pending tasks:
 
 * Configure the project to use the oauth2 server to authenticate. At this moment the service is running with a profile bypassing the authentication. I created the [configuration](src%2Fmain%2Fjava%2Fcom%2Fbernalvarela%2Fcustomerservice%2Fcontract%2Fconfiguration%2FSecurityConfigProd.java) but i was not able to make the application recover the roles info.
 * Configure the project to launch the service and tests in a docker image.
+* Use environment variables to store the secrets used in the application.
