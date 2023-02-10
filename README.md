@@ -125,7 +125,7 @@ To run the project and tests you need to install on your computer:
 ### Before run
 Before running the project you have to launch the docker images configured in the docker-compose file.
 
-* Running `docker-compose up` from the root folder.
+* Running `docker-compose up -d` from the root folder.
 
 For this project we are using:
 * Postgresql to persistency. (Port: 5432, User: postgres, Password: 123)
