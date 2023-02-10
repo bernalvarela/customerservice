@@ -1,6 +1,10 @@
 # Customer Service
 
-different team. <br/>
+The objective is to create a REST API to manage customer data for a small shop. It
+will work as the backend side for a CRM interface that is being developed by a
+different team.
+
+
 As the lead developer of the backend project, you'll be in charge of the API design and implementation. Here are the requirements for the API:
 
 ## Requirements:
@@ -16,8 +20,8 @@ authentication mechanism.
     * Image uploads should be able to be managed.
     * The customer should have a reference to the user who created it.
     * Update an existing customer.
-      * The customer should hold a reference to the last user who modified it.</li>
-    * Delete an existing customer.</li>
+      * The customer should hold a reference to the last user who modified it.
+    * Delete an existing customer.
 * An admin can also:
   * Manage users:
     * Create users.
@@ -35,8 +39,10 @@ authentication mechanism.
 * Keycloak as oauth2 server
 
 ## Api Rest definition:
-The api is defined in the file [api.yml](src%2Fmain%2Fresources%2Fapi.yml) and the api code is generated using the openapi code generator from spring.<br>
-The classes are generated in `/target/generated-sources/openapi/src`.<br/>
+The api is defined in the file [api.yml](src%2Fmain%2Fresources%2Fapi.yml) and the api code is generated using the openapi code generator from spring.
+
+The classes are generated in `/target/generated-sources/openapi/src`.
+
 The openapi generator is configured to generate
 * Model objects.
 * Api files with the operations. It contains the methods we overwrite in the controllers.
@@ -117,18 +123,19 @@ To run the project and tests you need to install on your computer:
 * Docker-compose
 
 ### Before run
-Before running the project you have to launch the docker images configured in the docker-compose file.<br/>
-* `docker-compose up`<br>
+Before running the project you have to launch the docker images configured in the docker-compose file.
+
+* `docker-compose up`
 
 For this project we are using:
 * Postgresql to persistency. (Port: 5432, User: postgres, Password: 123)
 * Keycloak for oauth2 authentication. (Port: 28080) 
 
 ### Run tests and project
-This project brings maven wrapper that's why we don't need to install it.<br/>
-* To run the tests we have to run:<br>
+This project brings maven wrapper that's why we don't need to install it.
+* To run the tests we have to run:
   * `./mvnw test` This command will launch all the controller, service and repository tests.
-* To run the application we to run:<br>
+* To run the application we to run:
   * `./mvnw spring-boot:run` This command will launch the service in the port 8080.
 
 The operations and the body content are defined in the [openapi](src%2Fmain%2Fresources%2Fapi.yml) file.
