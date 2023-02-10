@@ -152,13 +152,11 @@ public class UserRepositoryImplTest {
 
     @Test
     void shouldDeleteAUser() {
-        User u1 = repository.save(USERMODEL);
-        assertNotNull(jpaRepository.findById(u1.getId()));
+        com.bernalvarela.customerservice.infrastructure.entity.User u1 = jpaRepository.save(USER);
 
-        jpaRepository.deleteById(u1.getId());
-        assertThrows(ElementNotFoundException.class, () -> {
-            repository.findById(u1.getId());
-        });
+        repository.deleteById(u1.getId());
+
+        assertEquals(jpaRepository.findById(u1.getId()), Optional.empty());
     }
 
     @Test
@@ -170,6 +168,29 @@ public class UserRepositoryImplTest {
 
         assertThrows(ElementNotFoundException.class, () -> {
             repository.deleteById(ID);
+        });
+    }
+
+    @Test
+    void shouldUpdateUserAdminStatus() {
+        com.bernalvarela.customerservice.infrastructure.entity.User u1 = jpaRepository.save(USER);
+
+        repository.updateAdminStatus(u1.getId(), !u1.getAdmin());
+
+        jpaRepository.findById(u1.getId()).ifPresent(user -> assertEquals(user.getAdmin(), !u1.getAdmin()));
+
+        jpaRepository.deleteById(u1.getId());
+    }
+
+    @Test
+    void shouldUpdateUserAdminStatusUserUnexistent() {
+        try {
+            jpaRepository.deleteById(ID);
+        } catch (EmptyResultDataAccessException ignored) {
+        }
+
+        assertThrows(ElementNotFoundException.class, () -> {
+            repository.updateAdminStatus(ID, true);
         });
     }
 }

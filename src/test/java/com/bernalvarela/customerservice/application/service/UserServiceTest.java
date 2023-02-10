@@ -71,4 +71,10 @@ public class UserServiceTest {
         service.updateUser(ID, USERMODEL);
         verify(repository, times(1)).update(ID, USERMODEL);
     }
+
+    @Test
+    void shouldCallUpdateAdminStatusWhenUpdateAdminUser() {
+        service.updateAdninStatus(ID, ADMIN);
+        verify(repository, times(1)).updateAdminStatus(ID, ADMIN);
+    }
 }

@@ -144,4 +144,25 @@ public class UsersControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+
+    @Test
+    void shouldReturnOkWhenUpdateAdminStatusUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/api/v1/users/{id}/admin", ID)
+                        .content(asJsonString(USER))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenNotExistingUpdateUserAdmin() throws Exception {
+        doThrow(new ElementNotFoundException()).when(service).updateAdninStatus(any(), any());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/api/v1/users/{id}/admin", ID)
+                        .content(asJsonString(USER))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }

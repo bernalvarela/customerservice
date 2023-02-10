@@ -15,4 +15,6 @@ public interface UserRepository {
     void deleteById(Long id);
 
     void update(Long id, User u);
+
+    void updateAdminStatus(Long id, Boolean admin);
 }

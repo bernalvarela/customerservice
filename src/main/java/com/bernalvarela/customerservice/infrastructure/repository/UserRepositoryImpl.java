@@ -21,7 +21,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public User save(User u) {
         List<User> users = mapper.entityToDomain(repository.findByUsername(u.getUsername()));
-        User createdUser = null;
+        User createdUser;
         if (users == null || users.isEmpty()) {
             createdUser = mapper.entityToDomain(repository.save(mapper.domainToEntity(u)));
         } else {
@@ -54,6 +54,15 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (EmptyResultDataAccessException e) {
             throw new ElementNotFoundException();
         }
+    }
+
+    @Override public void updateAdminStatus(Long id, Boolean admin) {
+        repository.findById(id).ifPresentOrElse(user -> {
+            user.setAdmin(admin);
+            repository.save(user);
+        }, () -> {
+            throw new ElementNotFoundException();
+        });
     }
 
 }

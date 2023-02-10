@@ -130,13 +130,11 @@ public class CustomerRepositoryImplTest {
 
     @Test
     void shouldDeleteACustomer() {
-        Customer c1 = repository.save(CUSTOMERMODEL);
-        assertNotNull(jpaRepository.findById(c1.getId()));
+        com.bernalvarela.customerservice.infrastructure.entity.Customer c1 = jpaRepository.save(CUSTOMER);
 
-        jpaRepository.deleteById(c1.getId());
-        assertThrows(ElementNotFoundException.class, () -> {
-            repository.findById(c1.getId());
-        });
+        repository.deleteById(c1.getId());
+
+        assertEquals(jpaRepository.findById(c1.getId()), Optional.empty());
     }
 
     @Test

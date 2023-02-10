@@ -76,4 +76,17 @@ public class UsersController implements UsersApi {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Override
+    public ResponseEntity<String> changeAdminStatus(
+            @Parameter(name = "id", description = "", required = true) @PathVariable("id") Long id,
+            @Parameter(name = "User", description = "Update a user", required = true) @Valid @RequestBody User user
+    ) {
+        try {
+            service.updateAdninStatus(id, user.getAdmin());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ElementNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

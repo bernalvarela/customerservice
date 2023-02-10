@@ -32,4 +32,8 @@ public class UserService {
     public void updateUser(Long id, User u) {
         repository.update(id, u);
     }
+
+    public void updateAdninStatus(Long id, Boolean admin) {
+        repository.updateAdminStatus(id, admin);
+    }
 }
