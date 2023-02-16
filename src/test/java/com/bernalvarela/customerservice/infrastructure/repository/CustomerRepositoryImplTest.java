@@ -60,37 +60,6 @@ public class CustomerRepositoryImplTest {
     }
 
     @Test
-    void shouldUpdateExistingCustomer() {
-        com.bernalvarela.customerservice.infrastructure.entity.Customer savedCustomer = jpaRepository.save(CUSTOMER);
-
-        repository.update(savedCustomer.getId(), CUSTOMERMODEL);
-
-        Optional<com.bernalvarela.customerservice.infrastructure.entity.Customer> updatedCustomerOptional = jpaRepository.findById(
-                savedCustomer.getId());
-
-        updatedCustomerOptional.ifPresent(updatedCustomer -> {
-            assertEquals(savedCustomer.getId(), updatedCustomer.getId());
-            assertEquals(CUSTOMERMODEL.getName(), updatedCustomer.getName());
-            assertEquals(CUSTOMERMODEL.getSurname(), updatedCustomer.getSurname());
-            assertEquals(CUSTOMERMODEL.getPhoto(), updatedCustomer.getPhoto());
-        });
-
-        jpaRepository.deleteById(savedCustomer.getId());
-    }
-
-    @Test
-    void shouldFailWhenUpdatingNotExistingCustomer() {
-        try {
-            jpaRepository.deleteById(ID);
-        } catch (EmptyResultDataAccessException ignored) {
-        }
-
-        assertThrows(ElementNotFoundException.class, () -> {
-            repository.update(ID, CUSTOMERMODEL);
-        });
-    }
-
-    @Test
     void shouldReturnAllCustomers() {
         Customer c1 = repository.save(CUSTOMERMODEL);
         Customer c2 = repository.save(CUSTOMERMODEL);

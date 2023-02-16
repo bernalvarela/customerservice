@@ -17,9 +17,16 @@ paths:
       requestBody:
         description: Create a new customer
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Customer'
+              type: object
+              properties:
+                customer:
+                  type: object
+                profileImage:
+                  # default Content-Type for string/binary is `application/octet-stream`
+                  type: string
+                  format: binary
         required: true
       responses:
         '201':
@@ -79,7 +86,7 @@ paths:
           description: id not found
         '401':
           description: Unauthorized
-    put:
+    patch:
       tags:
         - customer
       summary: Update a customer
@@ -88,10 +95,16 @@ paths:
       requestBody:
         description: Update a customer
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Customer'
-        required: true
+              type: object
+              properties:
+                customer:
+                  type: object
+                profileImage:
+                  # default Content-Type for string/binary is `application/octet-stream`
+                  type: string
+                  format: binary
       responses:
         '200':
           description: Updated
@@ -103,6 +116,25 @@ paths:
           description: Bad request
         '404':
           description: Element not found
+  /customers/{id}/images:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+    delete:
+      summary: Delete a customers image
+      description: Delete a customer image
+      operationId: deleteCustomerImage
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: id not found
+        '401':
+          description: Unauthorized
   /users:
     post:
       tags:

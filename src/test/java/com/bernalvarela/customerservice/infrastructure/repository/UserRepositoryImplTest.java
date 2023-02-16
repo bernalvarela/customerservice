@@ -81,38 +81,6 @@ public class UserRepositoryImplTest {
     }
 
     @Test
-    void shouldUpdateExistingUser() {
-        com.bernalvarela.customerservice.infrastructure.entity.User savedUser = jpaRepository.save(USER);
-
-        repository.update(savedUser.getId(), USERMODEL);
-
-        Optional<com.bernalvarela.customerservice.infrastructure.entity.User> updatedUserOptional = jpaRepository.findById(
-                savedUser.getId());
-
-        updatedUserOptional.ifPresent(updatedUser -> {
-            assertEquals(savedUser.getId(), updatedUser.getId());
-            assertEquals(USERMODEL.getName(), updatedUser.getName());
-            assertEquals(USERMODEL.getSurname(), updatedUser.getSurname());
-            assertEquals(USERMODEL.getUsername(), updatedUser.getUsername());
-            assertEquals(USERMODEL.getAdmin(), updatedUser.getAdmin());
-        });
-
-        jpaRepository.deleteById(savedUser.getId());
-    }
-
-    @Test
-    void shouldFailWhenUpdatingNotExistingUser() {
-        try {
-            jpaRepository.deleteById(ID);
-        } catch (EmptyResultDataAccessException ignored) {
-        }
-
-        assertThrows(ElementNotFoundException.class, () -> {
-            repository.update(ID, USERMODEL);
-        });
-    }
-
-    @Test
     void shouldReturnAllUsers() {
         User u1 = repository.save(USERMODEL);
         User u2 = repository.save(USERMODEL.toBuilder().username(USERNAME2).build());

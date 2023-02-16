@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -40,6 +42,8 @@ public class CustomersControllerTest {
 
     private static final Long ID = 1L;
 
+    private static final String IMAGE_NAME = "an_image";
+
     private static final Customer CUSTOMER = Customer.builder().name(NAME).surname(SURNAME).photo(PHOTO).build();
 
     private static final com.bernalvarela.customerservice.domain.model.Customer CUSTOMERMODEL =
@@ -50,16 +54,32 @@ public class CustomersControllerTest {
                     .photo(PHOTO)
                     .build();
 
+    private static final MockMultipartFile IMAGE = new MockMultipartFile(
+            "file",
+            "foo.jpg",
+            "image/jpg", "foo".getBytes());
+
     @Test
     void shouldReturnCreatedCustomerWhenAddCustomer() throws Exception {
-        when(service.createCustomer(any())).thenReturn(CUSTOMERMODEL);
+        when(service.createCustomer(any(), any())).thenReturn(CUSTOMERMODEL);
+
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/v1/customers")
-                        .content(asJsonString(CUSTOMER))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .multipart("/api/v1/customers")
+                        .file(IMAGE)
+                        .param("customer", asJsonString(CUSTOMER))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ID));
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenJsonNotValidAndAddCustomer() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .multipart("/api/v1/customers")
+                        .file(IMAGE)
+                        .param("customer", "invalid json")
+                )
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -113,19 +133,67 @@ public class CustomersControllerTest {
     @Test
     void shouldReturnOkWhenUpdateCustomer() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/api/v1/customers/{id}", ID)
-                        .content(asJsonString(CUSTOMER))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .multipart(HttpMethod.PATCH, "/api/v1/customers/{id}", ID)
+                        .file(IMAGE)
+                        .param("customer", asJsonString(CUSTOMER))
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnOkWhenNullCustomerUpdateCustomer() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .multipart(HttpMethod.PATCH, "/api/v1/customers/{id}", ID)
+                        .file(IMAGE)
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnOkWhenNullImageUpdateCustomer() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .multipart(HttpMethod.PATCH, "/api/v1/customers/{id}", ID)
+                        .param("customer", asJsonString(CUSTOMER))
+                )
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnNotFoundWhenNotExistingUpdateCustomer() throws Exception {
-        doThrow(new ElementNotFoundException()).when(service).updateCustomer(any(), any());
+        doThrow(new ElementNotFoundException()).when(service).updateCustomer(any(), any(), any());
+
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/api/v1/customers/{id}", ID)
-                        .content(asJsonString(CUSTOMER))
+                        .multipart(HttpMethod.PATCH, "/api/v1/customers/{id}", ID)
+                        .file(IMAGE)
+                        .param("customer", asJsonString(CUSTOMER))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenJsonNotValidAndUpdateCustomer() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .multipart(HttpMethod.PATCH, "/api/v1/customers/{id}", ID)
+                        .file(IMAGE)
+                        .param("customer", "invalid json")
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnNoContentWhenDeleteCustomerImage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/customers/{id}/images", ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenNoExistDeleteCustomerImage() throws Exception {
+        doThrow(new ElementNotFoundException()).when(service).deleteCustomerImage(any());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/customers/{id}/images", ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

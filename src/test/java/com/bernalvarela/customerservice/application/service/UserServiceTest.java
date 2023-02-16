@@ -1,5 +1,7 @@
 package com.bernalvarela.customerservice.application.service;
 
+import com.bernalvarela.customerservice.application.mapper.UserVOMapper;
+import com.bernalvarela.customerservice.application.vo.UserVO;
 import com.bernalvarela.customerservice.domain.model.User;
 import com.bernalvarela.customerservice.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,14 +10,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @Mock
     private static UserRepository repository;
+
+    @Mock
+    private static UserVOMapper mapper;
 
     private static UserService service;
 
@@ -29,7 +34,15 @@ public class UserServiceTest {
 
     private static final Long ID = 1L;
 
-    private static final User USERMODEL = User.builder()
+    private static final User USER_MODEL = User.builder()
+            .id(ID)
+            .name(NAME)
+            .surname(SURNAME)
+            .username(USERNAME)
+            .admin(ADMIN)
+            .build();
+
+    private static final UserVO USER_VO = UserVO.builder()
             .id(ID)
             .name(NAME)
             .surname(SURNAME)
@@ -39,13 +52,13 @@ public class UserServiceTest {
 
     @BeforeEach
     public void init() {
-        service = new UserService(repository);
+        service = new UserService(repository, mapper);
     }
 
     @Test
     void shouldCallSaveInRepositoryWhenCreateUser() {
-        service.createUser(USERMODEL);
-        verify(repository, times(1)).save(USERMODEL);
+        service.createUser(USER_VO);
+        verify(repository, times(1)).save(any());
     }
 
     @Test
@@ -68,8 +81,9 @@ public class UserServiceTest {
 
     @Test
     void shouldCallUpdateWhenUpdateUser() {
-        service.updateUser(ID, USERMODEL);
-        verify(repository, times(1)).update(ID, USERMODEL);
+        when(repository.findById(any())).thenReturn(USER_MODEL);
+        service.updateUser(ID, USER_VO);
+        verify(repository, times(1)).save(any());
     }
 
     @Test

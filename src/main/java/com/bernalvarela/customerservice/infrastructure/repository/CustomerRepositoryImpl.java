@@ -22,16 +22,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         return mapper.entityToDomain(repository.save(mapper.domainToEntity(c)));
     }
 
-    public void update(Long id, Customer c) {
-        if (repository.findById(id).isPresent()) {
-            com.bernalvarela.customerservice.infrastructure.entity.Customer customer = mapper.domainToEntity(c);
-            customer.setId(id);
-            repository.save(customer);
-        } else {
-            throw new ElementNotFoundException();
-        }
-    }
-
     public List<Customer> findAll() {
         return mapper.entityToDomain(repository.findAll());
     }

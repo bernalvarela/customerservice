@@ -29,7 +29,7 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<User> addUser(@Valid User user) {
         try {
-            User createdUser = mapper.domainToDto(service.createUser(mapper.dtoToDomain(user)));
+            User createdUser = mapper.domainToDto(service.createUser(mapper.dtoToVO(user)));
             return ResponseEntity.ok(createdUser);
         } catch (ElementAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -70,7 +70,7 @@ public class UsersController implements UsersApi {
             @Parameter(name = "User", description = "Update a user", required = true) @Valid @RequestBody User user
     ) {
         try {
-            service.updateUser(id, mapper.dtoToDomain(user));
+            service.updateUser(id, mapper.dtoToVO(user));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ElementNotFoundException e) {
             return ResponseEntity.notFound().build();

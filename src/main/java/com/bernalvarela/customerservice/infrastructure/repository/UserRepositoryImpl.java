@@ -30,16 +30,6 @@ public class UserRepositoryImpl implements UserRepository {
         return createdUser;
     }
 
-    public void update(Long id, User u) {
-        if (repository.findById(id).isPresent()) {
-            com.bernalvarela.customerservice.infrastructure.entity.User user = mapper.domainToEntity(u);
-            user.setId(id);
-            repository.save(user);
-        } else {
-            throw new ElementNotFoundException();
-        }
-    }
-
     public List<User> findAll() {
         return mapper.entityToDomain(repository.findAll());
     }

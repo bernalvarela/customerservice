@@ -1,5 +1,7 @@
 package com.bernalvarela.customerservice.application.service;
 
+import com.bernalvarela.customerservice.application.mapper.UserVOMapper;
+import com.bernalvarela.customerservice.application.vo.UserVO;
 import com.bernalvarela.customerservice.domain.model.User;
 import com.bernalvarela.customerservice.domain.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -13,8 +15,10 @@ public class UserService {
 
     private UserRepository repository;
 
-    public User createUser(User u) {
-        return repository.save(u);
+    private UserVOMapper mapper;
+
+    public User createUser(UserVO u) {
+        return repository.save(mapper.voToDomain(u));
     }
 
     public List<User> getUsers() {
@@ -29,8 +33,10 @@ public class UserService {
         repository.deleteById(id);
     }
 
-    public void updateUser(Long id, User u) {
-        repository.update(id, u);
+    public void updateUser(Long id, UserVO u) {
+        User recoveredUser = repository.findById(id);
+        u.setId(recoveredUser.getId());
+        repository.save(mapper.voToDomain(u));
     }
 
     public void updateAdninStatus(Long id, Boolean admin) {

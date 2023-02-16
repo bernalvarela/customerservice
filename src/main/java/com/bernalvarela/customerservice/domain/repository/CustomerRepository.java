@@ -14,5 +14,4 @@ public interface CustomerRepository {
 
     void deleteById(Long id);
 
-    void update(Long id, Customer c);
 }

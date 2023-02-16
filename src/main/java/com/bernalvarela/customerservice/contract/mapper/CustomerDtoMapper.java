@@ -1,5 +1,6 @@
 package com.bernalvarela.customerservice.contract.mapper;
 
+import com.bernalvarela.customerservice.application.vo.CustomerVO;
 import com.bernalvarela.customerservice.openapi.model.Customer;
 import org.mapstruct.Mapper;
 
@@ -12,6 +13,6 @@ public interface CustomerDtoMapper {
 
     List<Customer> domainToDto(List<com.bernalvarela.customerservice.domain.model.Customer> customers);
 
-    com.bernalvarela.customerservice.domain.model.Customer dtoToDomain(Customer customer);
+    CustomerVO dtoToVO(Customer customer);
 
 }
