@@ -31,15 +31,15 @@ authentication mechanism.
     * Change admin status.
 
 ## Technologies used:
-* Spring boot 3.0.2
-* Java 17
+* Spring boot 3.2.4
+* Java 21
 * Maven 3
 * Docker compose
 * Postgresql
 * Keycloak as oauth2 server
 
 ## Api Rest definition:
-The api is defined in the file [api.yml](src%2Fmain%2Fresources%2Fapi.yml) and the api code is generated using the openapi code generator from spring.
+The api is defined in the file [api.yml](openapi/api.yml) and the api code is generated using the openapi code generator from spring.
 
 The classes are generated in `/target/generated-sources/openapi/src`.
 
@@ -79,7 +79,7 @@ Trying to find a low coupling code, easy to maintain and change I chose a based 
 * **Description:** This layer is where the use cases are implemented.
 * **Content:** services, DTOs and mappers.
 * **Internal dependencies:** domain layer.
-* **External dependencies:** javax validation library and hibernate validator
+* **External dependencies:** jakarta validation library and hibernate validator
   (scope test). No fwk dependencies are allowed.
 * **Tests categories:** solitary unit tests.
 * **Packages:** com.bernalvarela.customerservice.application
@@ -118,14 +118,14 @@ Trying to find a low coupling code, easy to maintain and change I chose a based 
 ## Launch application and tests:
 ### What do you need?
 To run the project and tests you need to install on your computer:
-* Java >= 17
+* Java >= 21
 * Docker
 * Docker-compose
 
 ### Before run
 Before running the project you have to launch the docker images configured in the docker-compose file.
 
-* Running `docker-compose up -d` from the root folder.
+* Running `docker compose up -d` from the root folder.
 
 For this project we are using:
 * Postgresql to persistency. (Port: 5432, User: postgres, Password: 123)
@@ -138,7 +138,7 @@ This project brings maven wrapper that's why we don't need to install it.
 * To run the application we to run:
   * `./mvnw spring-boot:run` This command will launch the service in the port 8080.
 
-The operations and the body content are defined in the [openapi](src%2Fmain%2Fresources%2Fapi.yml) file.
+The operations and the body content are defined in the [swagger](http://localhost:8080/swagger-ui.html) url.
 
 ## TODO:
 
