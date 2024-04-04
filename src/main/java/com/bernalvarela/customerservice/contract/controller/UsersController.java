@@ -7,6 +7,7 @@ import com.bernalvarela.customerservice.domain.exception.ElementNotFoundExceptio
 import com.bernalvarela.customerservice.openapi.api.UsersApi;
 import com.bernalvarela.customerservice.openapi.model.User;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
